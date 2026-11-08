@@ -52,6 +52,17 @@ public class MeatDetector {
         if (!Config.enabled() || !MeatScanner.isAvailable()) {
             return;
         }
+        // Safety net. Stage 1 normally already ran on FMLLoadCompleteEvent, long before this.
+        // If it did not (event skipped, or the config was unreadable at that moment), the mod
+        // would stay silently dead for the whole session, so retry here while we still can.
+        if (!MeatScanner.stage1Done()) {
+            LOGGER.warn("[MeatDetector] Stage 1 did not run before the world loaded - retrying now.");
+            try {
+                MeatScanner.scanRegistryIds();
+            } catch (Throwable t) {
+                LOGGER.error("[MeatDetector] Stage 1 retry crashed", t);
+            }
+        }
         try {
             MeatScanner.scanRecipes(event.getServer());
         } catch (Throwable t) {

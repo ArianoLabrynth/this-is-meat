@@ -44,6 +44,7 @@ public final class MeatScanner {
     private static long UNSAFE_OFFSET = -1L;
     private static boolean UNSAFE_RESOLVED;
     private static boolean WRITE_FAILED;
+    private static boolean STAGE1_DONE;
 
     private MeatScanner() {
     }
@@ -88,6 +89,11 @@ public final class MeatScanner {
         return MEAT.size();
     }
 
+    /** Whether the registry scan has run successfully at least once. */
+    public static boolean stage1Done() {
+        return STAGE1_DONE;
+    }
+
     public static List<String> report() {
         return REPORT;
     }
@@ -97,6 +103,10 @@ public final class MeatScanner {
     /** Stage 1: registry id + config lists. Called before the game window shows up. */
     public static int scanRegistryIds() {
         if (!isAvailable()) {
+            return 0;
+        }
+        if (STAGE1_DONE) {
+            // Already done. Safe to call again but pointless, and re-running would only spam the log.
             return 0;
         }
         if (!Config.SPEC.isLoaded()) {
@@ -127,6 +137,7 @@ public final class MeatScanner {
             }
         }
         LOGGER.info("[MeatDetector] Stage 1 (item id): {} food items flagged, {} total", added, MEAT.size());
+        STAGE1_DONE = true;
         return added;
     }
 
