@@ -34,13 +34,6 @@ Makes carnivore-style origins recognise meat added by other mods.
 - 副作用：任何读取 `isMeat` 的模组都会看到这些食物是肉（这在语义上是正确的）
 - 只做了 1.20.1 Forge
 
-### 附：本整合包遇到的两个上游崩溃
-
-与本模组无关，但都是别的模组 jar 里的大写文件名导致的启动崩溃，修法见 README 的「已知上游问题」。
-
-- EpicFight Nightfall 3.4.2：`animmodels/.../kusabimaru/data/Ichimonji_1.json`、`Ichimonji_2.json`
-- Prefab 1.10.0.1：`textures/item/item_start_house_Old.png`
-
 ---
 
 MIT License · by ArianoLabrynth

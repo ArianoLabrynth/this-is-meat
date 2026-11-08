@@ -103,42 +103,6 @@ Origins or Hell's Gate.
 - 服务器端可用：纯服务端会跑第 1、2 段，客户端跑第 3 段
 - **副作用**：任何读取 `isMeat` 的模组都会看到这些食物是肉（例如某些模组的食肉动物喂养判定）。这在语义上是正确的；若你不想影响某个物品，把它加进 `blacklist`
 
-## 已知上游问题 / Known upstream issues
-
-以下两个问题与本模组无关，是别的模组 jar 内的**大写文件名**导致的，在 1.20.1 Forge 整合包里会直接让游戏在启动阶段崩溃。两者的修法一样，都不需要改代码，只要把 jar 里的文件名改成小写。
-
-### EpicFight Nightfall 3.4.2（`efn`）
-
-```
-assets/efn/animmodels/animations/biped/sekiro/kusabimaru/data/Ichimonji_1.json
-assets/efn/animmodels/animations/biped/sekiro/kusabimaru/data/Ichimonji_2.json
-```
-
-EpicFight 在加载动画目录时，会给目录里每个文件拼上 `.mcmeta` 后缀再构造资源 ID。  
-`ResourceLocation` 只接受 `a-z0-9/._-`，大写 `I` 会直接抛 `ResourceLocationException`：
-
-```
-Non [a-z0-9/._-] character in path:
-efn:animmodels/animations/biped/sekiro/kusabimaru/data/Ichimonji_1.json.mcmeta
-```
-
-改成 `ichimonji_1.json` / `ichimonji_2.json` 即可。注意**不能另起名字** —— 这两个文件是同一目录下 `Ichimonji` 动画的刀光拖尾配置，EpicFight 按动画名匹配，改错名会让特效继续失效。
-
-### Prefab 1.10.0.1（`prefab`）
-
-```
-assets/prefab/textures/item/item_start_house_Old.png
-```
-
-同样的原因，图集扫描 `textures/` 时踩到。改成 `item_start_house_old.png` 即可（该贴图在 jar 内没有任何引用，属孤立文件）。
-
-> 想自己验证：对着任意一个 1.20.1 整合包扫一遍 `assets/**` 下扩展名为 `.png` / `.json` 的文件，路径里出现大写字母的就是隐患。`README.txt` 这类文件不会被扫描，因为它们过不了扩展名过滤。
-
-可以直接提交给作者的完整报告：[`docs/upstream/`](docs/upstream/)
-
-- Prefab 已上报：[Brian-Wuest/MC-Prefab#334](https://github.com/Brian-Wuest/MC-Prefab/issues/334)
-- EpicFight Nightfall 的作者没有公开的仓库或 issue 渠道，报告留在 [`docs/upstream/nightfall-uppercase-animation.md`](docs/upstream/nightfall-uppercase-animation.md)
-
 ## 实现说明 / Implementation note
 
 `Item` 的 `FoodProperties` 字段是 `private final`，且 Forge 运行时使用 SRG 名称，  
