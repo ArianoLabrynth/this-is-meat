@@ -1,4 +1,4 @@
-package com.meatdetector;
+package com.thisismeat;
 
 import net.minecraftforge.common.ForgeConfigSpec;
 
@@ -20,7 +20,7 @@ public final class Config {
     static {
         ForgeConfigSpec.Builder builder = new ForgeConfigSpec.Builder();
 
-        builder.comment("Meat Detector - recognises meat added by other mods.").push("general");
+        builder.comment("This Is Meat - recognises meat added by other mods.").push("general");
 
         ENABLED = builder
                 .comment("Master switch. When false the mod does nothing at all.")

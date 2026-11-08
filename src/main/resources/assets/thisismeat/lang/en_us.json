@@ -1,0 +1,12 @@
+{
+  "thisismeat.configuration.general": "General",
+  "thisismeat.configuration.general.enabled": "Master switch",
+  "thisismeat.configuration.general.match_item_id": "Match registry id",
+  "thisismeat.configuration.general.match_recipes": "Match crafting recipes",
+  "thisismeat.configuration.general.match_display_name": "Match display name",
+  "thisismeat.configuration.rules": "Rules",
+  "thisismeat.configuration.rules.extra_keywords": "Extra keywords",
+  "thisismeat.configuration.rules.whitelist": "Always meat",
+  "thisismeat.configuration.rules.blacklist": "Never meat",
+  "thisismeat.configuration.rules.log_results": "Log results"
+}

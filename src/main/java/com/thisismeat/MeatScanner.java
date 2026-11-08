@@ -1,4 +1,4 @@
-package com.meatdetector;
+package com.thisismeat;
 
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -30,7 +30,7 @@ import java.util.Set;
  */
 public final class MeatScanner {
 
-    private static final Logger LOGGER = MeatDetector.LOGGER;
+    private static final Logger LOGGER = ThisIsMeat.LOGGER;
 
     /** Item -> human readable reason, for logging and for the debug command. */
     private static final Set<Item> MEAT = Collections.newSetFromMap(new IdentityHashMap<>());
@@ -56,13 +56,13 @@ public final class MeatScanner {
                     field.setAccessible(true);
                     return field;
                 } catch (Throwable t) {
-                    LOGGER.error("[MeatDetector] Could not access {}.{}: {}",
+                    LOGGER.error("[ThisIsMeat] Could not access {}.{}: {}",
                             Item.class.getName(), field.getName(), t.toString());
                     return null;
                 }
             }
         }
-        LOGGER.error("[MeatDetector] No FoodProperties field found on Item - mod disabled.");
+        LOGGER.error("[ThisIsMeat] No FoodProperties field found on Item - mod disabled.");
         return null;
     }
 
@@ -110,7 +110,7 @@ public final class MeatScanner {
             return 0;
         }
         if (!Config.SPEC.isLoaded()) {
-            LOGGER.warn("[MeatDetector] Config is not loaded yet - stage 1 skipped.");
+            LOGGER.warn("[ThisIsMeat] Config is not loaded yet - stage 1 skipped.");
             return 0;
         }
         MeatRules.setExtraKeywords(Config.EXTRA_KEYWORDS.get());
@@ -136,7 +136,7 @@ public final class MeatScanner {
                 added++;
             }
         }
-        LOGGER.info("[MeatDetector] Stage 1 (item id): {} food items flagged, {} total", added, MEAT.size());
+        LOGGER.info("[ThisIsMeat] Stage 1 (item id): {} food items flagged, {} total", added, MEAT.size());
         STAGE1_DONE = true;
         return added;
     }
@@ -154,7 +154,7 @@ public final class MeatScanner {
             try {
                 recipes = recipeManager.getRecipes();
             } catch (Throwable t) {
-                LOGGER.warn("[MeatDetector] Could not read recipes: {}", t.toString());
+                LOGGER.warn("[ThisIsMeat] Could not read recipes: {}", t.toString());
                 return added;
             }
             for (Recipe<?> recipe : recipes) {
@@ -186,7 +186,7 @@ public final class MeatScanner {
                 break;
             }
         }
-        LOGGER.info("[MeatDetector] Stage 2 (recipes): {} more food items flagged, {} total", added, MEAT.size());
+        LOGGER.info("[ThisIsMeat] Stage 2 (recipes): {} more food items flagged, {} total", added, MEAT.size());
         return added;
     }
 
@@ -200,7 +200,7 @@ public final class MeatScanner {
             return 0;
         }
         if (markIfMeatName(item, name, "display name")) {
-            LOGGER.info("[MeatDetector] Stage 3 (display name): {} total", MEAT.size());
+            LOGGER.info("[ThisIsMeat] Stage 3 (display name): {} total", MEAT.size());
             return 1;
         }
         return 0;
@@ -276,7 +276,7 @@ public final class MeatScanner {
         String id = String.valueOf(ForgeRegistries.ITEMS.getKey(item));
         REPORT.add(id + "  <-  " + reason);
         if (Config.SPEC.isLoaded() && Config.LOG_RESULTS.get()) {
-            LOGGER.debug("[MeatDetector] flagged {} ({})", id, reason);
+            LOGGER.debug("[ThisIsMeat] flagged {} ({})", id, reason);
         }
         return true;
     }
@@ -329,11 +329,11 @@ public final class MeatScanner {
             return;
         }
         WRITE_FAILED = true;
-        LOGGER.error("[MeatDetector] Could not change the food properties of {}. This mod cannot work "
+        LOGGER.error("[ThisIsMeat] Could not change the food properties of {}. This mod cannot work "
                 + "on this setup; please report it together with the line below.",
                 String.valueOf(ForgeRegistries.ITEMS.getKey(item)));
         if (cause != null) {
-            LOGGER.error("[MeatDetector] Cause:", cause);
+            LOGGER.error("[ThisIsMeat] Cause:", cause);
         }
     }
 
@@ -348,7 +348,7 @@ public final class MeatScanner {
             put.invoke(unsafe, item, UNSAFE_OFFSET, patched);
             return true;
         } catch (Throwable t) {
-            LOGGER.debug("[MeatDetector] Unsafe write failed: {}", t.toString());
+            LOGGER.debug("[ThisIsMeat] Unsafe write failed: {}", t.toString());
             return false;
         }
     }
@@ -368,7 +368,7 @@ public final class MeatScanner {
                 UNSAFE_OFFSET = ((Number) offset.invoke(UNSAFE, FOOD_FIELD)).longValue();
             }
         } catch (Throwable t) {
-            LOGGER.debug("[MeatDetector] sun.misc.Unsafe unavailable: {}", t.toString());
+            LOGGER.debug("[ThisIsMeat] sun.misc.Unsafe unavailable: {}", t.toString());
             UNSAFE = null;
         }
         return UNSAFE;
@@ -415,7 +415,7 @@ public final class MeatScanner {
         try {
             return scanRecipes(server.getRecipeManager(), server.registryAccess());
         } catch (Throwable t) {
-            LOGGER.warn("[MeatDetector] Recipe scan failed: {}", t.toString());
+            LOGGER.warn("[ThisIsMeat] Recipe scan failed: {}", t.toString());
             return 0;
         }
     }

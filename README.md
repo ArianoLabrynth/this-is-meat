@@ -1,4 +1,4 @@
-# 肉类探测器 (Meat Detector)
+# 这是肉食 (This Is Meat)
 
 ![version](https://img.shields.io/badge/Minecraft-1.20.1-informational)
 
@@ -11,6 +11,9 @@
 使食肉类的起源和能力正确识别其他模组添加的肉食。
 
 Makes carnivore-style origins and powers actually recognise meat added by other mods.
+
+> 代码与文案由 AI 辅助完成，作者负责测试与调整。
+> 欢迎拿去喂 AI 做其他版本的，或者干任何事。
 
 ---
 
@@ -41,11 +44,11 @@ Origins or Hell's Gate.
 
 ### 三段判定 / Three detection stages
 
-| 阶段 | 时机          | 依据                                                                    |
+| 阶段 | 时机 | 依据 |
 | -- | ----------- | --------------------------------------------------------------------- |
-| 1  | 游戏启动后（主菜单前） | 物品注册 ID，例如 `artifacts:eternal_steak`、`alexsmobs:cooked_kangaroo_meat` |
-| 2  | 进入世界后       | 配方图：只要某配方用到了肉，产物也算肉（覆盖“饺子”“寿司卷”“汉堡”这类名字里没肉字的菜）                        |
-| 3  | 客户端进入世界后    | 翻译后的显示名（中/英关键词），补上 ID 没线索的物品                                          |
+| 1 | 游戏启动后（主菜单前） | 物品注册 ID，例如 `artifacts:eternal_steak`、`alexsmobs:cooked_kangaroo_meat` |
+| 2 | 进入世界后 | 配方图：只要某配方用到了肉，产物也算肉（覆盖“饺子”“寿司卷”“汉堡”这类名字里没肉字的菜） |
+| 3 | 客户端进入世界后 | 翻译后的显示名（中/英关键词），补上 ID 没线索的物品 |
 
 第 2 段会连跑两轮，因此 `生肉 → 熟肉 → 肉菜` 这条链能一路传下去。
 
@@ -58,7 +61,7 @@ Origins or Hell's Gate.
 
 ## 配置 / Config
 
-`config/meatdetector-common.toml`
+`config/thisismeat-common.toml`
 
 ```toml
 [general]
@@ -76,16 +79,16 @@ Origins or Hell's Gate.
 
 ## 命令 / Commands
 
-| 命令                     | 作用                    |
-| ---------------------- | --------------------- |
-| `/meatdetector list`   | 列出被标记的物品及判定依据（前 40 条） |
-| `/meatdetector status` | 只显示被标记的总数             |
+| 命令 | 作用 |
+| ------------------- | --------------------- |
+| `/thisismeat list`   | 列出被标记的物品及判定依据（前 40 条） |
+| `/thisismeat status` | 只显示被标记的总数 |
 
 需要权限等级 2（单人游戏开作弊即可）。
 
 ## 安装 / Install
 
-把 `meatdetector-1.20.1-1.0.0.jar` 丢进 `mods/` 即可。**没有前置要求** ——  
+把 `thisismeat-1.20.1-1.0.0.jar` 丢进 `mods/` 即可。**没有前置要求** ——  
 不需要 Origins、不需要 Hell's Gate、不需要任何库。
 
 - 单机：直接生效
@@ -99,6 +102,39 @@ Origins or Hell's Gate.
 - 在 Sinytra Connector（Forge 载 Fabric 模组）环境下正常工作
 - 服务器端可用：纯服务端会跑第 1、2 段，客户端跑第 3 段
 - **副作用**：任何读取 `isMeat` 的模组都会看到这些食物是肉（例如某些模组的食肉动物喂养判定）。这在语义上是正确的；若你不想影响某个物品，把它加进 `blacklist`
+
+## 已知上游问题 / Known upstream issues
+
+以下两个问题与本模组无关，是别的模组 jar 内的**大写文件名**导致的，在 1.20.1 Forge 整合包里会直接让游戏在启动阶段崩溃。两者的修法一样，都不需要改代码，只要把 jar 里的文件名改成小写。
+
+### EpicFight Nightfall 3.4.2（`efn`）
+
+```
+assets/efn/animmodels/animations/biped/sekiro/kusabimaru/data/Ichimonji_1.json
+assets/efn/animmodels/animations/biped/sekiro/kusabimaru/data/Ichimonji_2.json
+```
+
+EpicFight 在加载动画目录时，会给目录里每个文件拼上 `.mcmeta` 后缀再构造资源 ID。  
+`ResourceLocation` 只接受 `a-z0-9/._-`，大写 `I` 会直接抛 `ResourceLocationException`：
+
+```
+Non [a-z0-9/._-] character in path:
+efn:animmodels/animations/biped/sekiro/kusabimaru/data/Ichimonji_1.json.mcmeta
+```
+
+改成 `ichimonji_1.json` / `ichimonji_2.json` 即可。注意**不能另起名字** —— 这两个文件是同一目录下 `Ichimonji` 动画的刀光拖尾配置，EpicFight 按动画名匹配，改错名会让特效继续失效。
+
+### Prefab 1.10.0.1（`prefab`）
+
+```
+assets/prefab/textures/item/item_start_house_Old.png
+```
+
+同样的原因，图集扫描 `textures/` 时踩到。改成 `item_start_house_old.png` 即可（该贴图在 jar 内没有任何引用，属孤立文件）。
+
+> 想自己验证：对着任意一个 1.20.1 整合包扫一遍 `assets/**` 下扩展名为 `.png` / `.json` 的文件，路径里出现大写字母的就是隐患。`README.txt` 这类文件不会被扫描，因为它们过不了扩展名过滤。
+
+可以直接提交给作者的完整报告：[`docs/upstream/`](docs/upstream/)
 
 ## 实现说明 / Implementation note
 
@@ -115,7 +151,7 @@ Origins or Hell's Gate.
 
 ```bash
 ./gradlew build
-# 产物: build/libs/meatdetector-1.20.1-1.0.0.jar
+# 产物: build/libs/thisismeat-1.20.1-1.0.0.jar
 ```
 
 如果 `maven.minecraftforge.net` 连不上或很慢，在项目根目录建一个 **不入库** 的

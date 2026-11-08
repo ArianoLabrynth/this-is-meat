@@ -1,0 +1,12 @@
+{
+  "thisismeat.configuration.general": "通用",
+  "thisismeat.configuration.general.enabled": "总开关",
+  "thisismeat.configuration.general.match_item_id": "按物品 ID 判定",
+  "thisismeat.configuration.general.match_recipes": "按配方判定",
+  "thisismeat.configuration.general.match_display_name": "按显示名判定",
+  "thisismeat.configuration.rules": "规则",
+  "thisismeat.configuration.rules.extra_keywords": "额外关键词",
+  "thisismeat.configuration.rules.whitelist": "强制视为肉",
+  "thisismeat.configuration.rules.blacklist": "强制不是肉",
+  "thisismeat.configuration.rules.log_results": "记录结果"
+}

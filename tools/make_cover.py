@@ -1,4 +1,4 @@
-"""Renders the Meat Detector cover images.
+"""Renders the This Is Meat cover images.
 
 cover.png         1280x720  - main cover for the MC百科 entry
 cover-square.png   800x800  - square fallback, in case the thumbnail gets cropped
@@ -57,9 +57,9 @@ d = ImageDraw.Draw(img)
 
 d.rectangle([M, 92, W - M, 93], fill=HAIRLINE)
 d.text((M, 118), "MINECRAFT 1.20.1   ·   FORGE 47.x", font=font(LATIN_REG, 21), fill=MUTED)
-d.text((M - 4, 170), "Meat Detector", font=font(LATIN_BOLD, 116), fill=INK)
+d.text((M - 4, 170), "This Is Meat", font=font(LATIN_BOLD, 116), fill=INK)
 d.rectangle([M, 330, M + 84, 338], fill=ACCENT)
-d.text((M, 372), "肉类探测器", font=font(CN_BOLD, 62), fill=INK)
+d.text((M, 372), "这是肉食", font=font(CN_BOLD, 62), fill=INK)
 d.text((M, 486), "让「只能吃肉」的起源，认出所有模组的肉", font=font(CN_REG, 34), fill=BODY)
 bullets(d, M, 596, ["无前置模组", "装了就生效", "服务端可用"])
 d.rectangle([M, H - 92, W - M, H - 91], fill=HAIRLINE)
@@ -86,8 +86,8 @@ f_title = font(LATIN_BOLD, 92)
 f_cn = font(CN_BOLD, 54)
 f_tag = font(CN_REG, 27)
 
-title = "Meat Detector"
-cn = "肉类探测器"
+title = "This Is Meat"
+cn = "这是肉食"
 tag = "认出所有模组的肉"
 
 for text, f, y, fill in [

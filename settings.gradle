@@ -6,4 +6,4 @@ pluginManagement {
     }
 }
 
-rootProject.name = 'meatdetector'
+rootProject.name = 'thisismeat'

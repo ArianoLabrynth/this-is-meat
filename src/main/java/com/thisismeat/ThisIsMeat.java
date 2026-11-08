@@ -1,4 +1,4 @@
-package com.meatdetector;
+package com.thisismeat;
 
 import com.mojang.brigadier.context.CommandContext;
 import net.minecraft.commands.CommandSourceStack;
@@ -18,13 +18,13 @@ import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
-@Mod(MeatDetector.MODID)
-public class MeatDetector {
+@Mod(ThisIsMeat.MODID)
+public class ThisIsMeat {
 
-    public static final String MODID = "meatdetector";
-    public static final Logger LOGGER = LoggerFactory.getLogger("MeatDetector");
+    public static final String MODID = "thisismeat";
+    public static final Logger LOGGER = LoggerFactory.getLogger("ThisIsMeat");
 
-    public MeatDetector() {
+    public ThisIsMeat() {
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, Config.SPEC);
         IEventBus modBus = FMLJavaModLoadingContext.get().getModEventBus();
         modBus.addListener(this::onLoadComplete);
@@ -34,17 +34,17 @@ public class MeatDetector {
 
     private void onLoadComplete(FMLLoadCompleteEvent event) {
         if (!Config.enabled()) {
-            LOGGER.info("[MeatDetector] Disabled by config, doing nothing.");
+            LOGGER.info("[ThisIsMeat] Disabled by config, doing nothing.");
             return;
         }
         if (!MeatScanner.isAvailable()) {
-            LOGGER.error("[MeatDetector] Food properties are not reachable on this Minecraft build - mod inactive.");
+            LOGGER.error("[ThisIsMeat] Food properties are not reachable on this Minecraft build - mod inactive.");
             return;
         }
         try {
             MeatScanner.scanRegistryIds();
         } catch (Throwable t) {
-            LOGGER.error("[MeatDetector] Stage 1 (item id) crashed", t);
+            LOGGER.error("[ThisIsMeat] Stage 1 (item id) crashed", t);
         }
     }
 
@@ -56,17 +56,17 @@ public class MeatDetector {
         // If it did not (event skipped, or the config was unreadable at that moment), the mod
         // would stay silently dead for the whole session, so retry here while we still can.
         if (!MeatScanner.stage1Done()) {
-            LOGGER.warn("[MeatDetector] Stage 1 did not run before the world loaded - retrying now.");
+            LOGGER.warn("[ThisIsMeat] Stage 1 did not run before the world loaded - retrying now.");
             try {
                 MeatScanner.scanRegistryIds();
             } catch (Throwable t) {
-                LOGGER.error("[MeatDetector] Stage 1 retry crashed", t);
+                LOGGER.error("[ThisIsMeat] Stage 1 retry crashed", t);
             }
         }
         try {
             MeatScanner.scanRecipes(event.getServer());
         } catch (Throwable t) {
-            LOGGER.error("[MeatDetector] Stage 2 (recipes) crashed", t);
+            LOGGER.error("[ThisIsMeat] Stage 2 (recipes) crashed", t);
         }
     }
 
@@ -81,7 +81,7 @@ public class MeatDetector {
         int marked = MeatScanner.markedCount();
         int detailed = MeatScanner.report().size();
         ctx.getSource().sendSuccess(() -> Component.literal(
-                "Meat Detector: " + marked + " food items are flagged as meat"
+                "This Is Meat: " + marked + " food items are flagged as meat"
                         + " (" + detailed + " of them changed by this mod)."), false);
         return marked;
     }
@@ -89,11 +89,11 @@ public class MeatDetector {
     private int printReport(CommandContext<CommandSourceStack> ctx) {
         List<String> report = MeatScanner.report();
         if (report.isEmpty()) {
-            ctx.getSource().sendSuccess(() -> Component.literal("Meat Detector: nothing flagged yet (join a world first)."), false);
+            ctx.getSource().sendSuccess(() -> Component.literal("This Is Meat: nothing flagged yet (join a world first)."), false);
             return 0;
         }
         int limit = Math.min(report.size(), 40);
-        ctx.getSource().sendSuccess(() -> Component.literal("Meat Detector: " + report.size()
+        ctx.getSource().sendSuccess(() -> Component.literal("This Is Meat: " + report.size()
                 + " items flagged (showing " + limit + ")"), false);
         for (int i = 0; i < limit; i++) {
             String line = report.get(i);

@@ -1,4 +1,4 @@
-package com.meatdetector;
+package com.thisismeat;
 
 import java.util.ArrayList;
 import java.util.Collection;

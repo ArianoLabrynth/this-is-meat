@@ -1,4 +1,4 @@
-package com.meatdetector;
+package com.thisismeat;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.language.I18n;
@@ -13,7 +13,7 @@ import net.minecraftforge.fml.common.Mod;
  * Client only: the translated name is the last piece of evidence, and language files are only
  * available once the client is fully up, so this runs lazily on the first tick of a loaded world.
  */
-@Mod.EventBusSubscriber(modid = MeatDetector.MODID, bus = Mod.EventBusSubscriber.Bus.FORGE, value = Dist.CLIENT)
+@Mod.EventBusSubscriber(modid = ThisIsMeat.MODID, bus = Mod.EventBusSubscriber.Bus.FORGE, value = Dist.CLIENT)
 public final class ClientDetection {
 
     private static boolean namesDone;
@@ -39,7 +39,7 @@ public final class ClientDetection {
             try {
                 MeatScanner.scanRecipes(minecraft.level.getRecipeManager(), minecraft.level.registryAccess());
             } catch (Throwable t) {
-                MeatDetector.LOGGER.warn("[MeatDetector] Client recipe scan failed: {}", t.toString());
+                ThisIsMeat.LOGGER.warn("[ThisIsMeat] Client recipe scan failed: {}", t.toString());
             }
         }
         if (!namesDone) {
@@ -65,7 +65,7 @@ public final class ClientDetection {
             }
             added += MeatScanner.scanDisplayName(name, item);
         }
-        MeatDetector.LOGGER.info("[MeatDetector] Stage 3 (display name): {} more flagged, {} total",
+        ThisIsMeat.LOGGER.info("[ThisIsMeat] Stage 3 (display name): {} more flagged, {} total",
                 added, MeatScanner.markedCount());
     }
 }
