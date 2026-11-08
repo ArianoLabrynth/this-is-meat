@@ -200,7 +200,8 @@ public final class MeatScanner {
             return 0;
         }
         if (markIfMeatName(item, name, "display name")) {
-            LOGGER.info("[ThisIsMeat] Stage 3 (display name): {} total", MEAT.size());
+            // Per-item logging is DEBUG only: the caller prints one summary line. On a large pack
+            // this stage alone flags hundreds of items, which used to spam 20+ INFO lines.
             return 1;
         }
         return 0;
