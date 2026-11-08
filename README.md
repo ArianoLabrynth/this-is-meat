@@ -136,6 +136,9 @@ assets/prefab/textures/item/item_start_house_Old.png
 
 可以直接提交给作者的完整报告：[`docs/upstream/`](docs/upstream/)
 
+- Prefab 已上报：[Brian-Wuest/MC-Prefab#334](https://github.com/Brian-Wuest/MC-Prefab/issues/334)
+- EpicFight Nightfall 的作者没有公开的仓库或 issue 渠道，报告留在 [`docs/upstream/nightfall-uppercase-animation.md`](docs/upstream/nightfall-uppercase-animation.md)
+
 ## 实现说明 / Implementation note
 
 `Item` 的 `FoodProperties` 字段是 `private final`，且 Forge 运行时使用 SRG 名称，  
