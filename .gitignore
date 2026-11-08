@@ -1,0 +1,31 @@
+# Gradle / build output
+.gradle/
+build/
+out/
+bin/
+
+# IDE
+.idea/
+*.iml
+*.ipr
+*.iws
+.vscode/
+.settings/
+.project
+.classpath
+.run/
+
+# Minecraft run directory created by runClient / runServer
+run/
+run-data/
+logs/
+
+# Machine-local overrides (repositories, JDK home) - never publish these
+local.properties
+gradle.properties.bak
+
+# Misc
+*.log
+build.log
+.DS_Store
+Thumbs.db

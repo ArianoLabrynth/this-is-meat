@@ -1,0 +1,84 @@
+plugins {
+    id 'java'
+    id 'net.minecraftforge.gradle' version '[6.0,6.2)'
+}
+
+version = '1.0.0'
+group = 'com.meatdetector'
+
+base {
+    archivesName = 'meatdetector-1.20.1'
+}
+
+java {
+    toolchain.languageVersion = JavaLanguageVersion.of(17)
+}
+
+minecraft {
+    mappings channel: 'official', version: '1.20.1'
+    copyIdeResources = true
+}
+
+// Optional, git-ignored machine overrides. See "Building" in README.
+//   local.properties:
+//     mirrorMaven=https://bmclapi2.bangbang93.com/maven
+def localProps = new Properties()
+def localPropsFile = file('local.properties')
+if (localPropsFile.exists()) {
+    localPropsFile.withInputStream { localProps.load(it) }
+}
+
+repositories {
+    // Inserted first so a reachable mirror wins over the (often throttled) Forge maven.
+    ['localMaven', 'mirrorMaven'].each { key ->
+        def repoUrl = localProps.getProperty(key)
+        if (repoUrl) {
+            maven {
+                name = key
+                url = repoUrl
+            }
+        }
+    }
+    maven {
+        name = 'MinecraftForge'
+        url = 'https://maven.minecraftforge.net/'
+    }
+    mavenCentral()
+}
+
+dependencies {
+    minecraft 'net.minecraftforge:forge:1.20.1-47.4.28'
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+}
+
+processResources {
+    def expandProps = [
+            version    : project.version,
+            mod_id     : 'meatdetector',
+            mod_name   : 'Meat Detector',
+            mod_license: 'MIT',
+            mod_authors: 'ArianoLabrynth',
+            mod_desc   : 'Detects meat from other mods by item id, display name and crafting recipes, then flags it so origins/carnivore style checks recognise it.'
+    ]
+    inputs.properties expandProps
+    filesMatching(['META-INF/mods.toml', 'pack.mcmeta']) {
+        expand expandProps
+    }
+}
+
+jar {
+    manifest {
+        attributes([
+                'Specification-Title'    : 'meatdetector',
+                'Specification-Vendor'   : 'Meat Detector contributors',
+                'Specification-Version'  : '1',
+                'Implementation-Title'   : project.name,
+                'Implementation-Version' : project.version,
+                'Implementation-Vendor'  : 'Meat Detector contributors'
+        ])
+    }
+    finalizedBy 'reobfJar'
+}

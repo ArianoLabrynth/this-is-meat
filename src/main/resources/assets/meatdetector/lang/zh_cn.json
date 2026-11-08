@@ -1,0 +1,12 @@
+{
+  "meatdetector.configuration.general": "通用",
+  "meatdetector.configuration.general.enabled": "总开关",
+  "meatdetector.configuration.general.match_item_id": "按物品 ID 判定",
+  "meatdetector.configuration.general.match_recipes": "按配方判定",
+  "meatdetector.configuration.general.match_display_name": "按显示名判定",
+  "meatdetector.configuration.rules": "规则",
+  "meatdetector.configuration.rules.extra_keywords": "额外关键词",
+  "meatdetector.configuration.rules.whitelist": "强制视为肉",
+  "meatdetector.configuration.rules.blacklist": "强制不是肉",
+  "meatdetector.configuration.rules.log_results": "记录结果"
+}
